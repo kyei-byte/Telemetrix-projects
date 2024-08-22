@@ -38,9 +38,9 @@ GREEN_LED = 4
 BLUE_LED = 5
 
 # yet to figure out how to implement this for the debouncing. Having troubles with this.
-#lastButtonState = 0
-#debounceCounter = 0
-#debounceThreshold = 4
+# lastButtonState = 0
+# debounceCounter = 0
+# debounceThreshold = 4
 lastPressed = 0
 lastReleased = 0
 debounceTime = 0.100
@@ -102,7 +102,7 @@ def the_callback(data):
     if lastPressed > lastReleased + debounceTime:
         mode = (mode + 1) % 3
 
-    #debounceCounter += 1
+    # debounceCounter += 1
     print("Button pressed to switch LED!")
 
     lastPressed = now
