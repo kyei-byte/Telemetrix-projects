@@ -30,9 +30,13 @@ class MCP4728:
         # low_byte = value & 0xFF   # Lower bits
         # command = [high_byte, low_byte]  # getting rid of this
         command = bytearray(3)        # to create sequence of bytes
+
+        high_4_bits = (value >> 8) & 0x0F
+        low_8_bits = value & 0x0FF
+
         command[0] = (_MCP4728_MULTI_WRITE_CMD | (channel << 1) | udac)   # app by pedro
-        command[1] = ((value >> 4) & 0xFF) | (vref << 7) | ((pd & 0b11) << 5 | (gain << 4))  # problem here
-        command[2] = (value & 0x0F) << 4
+        command[1] = (high_4_bits) | (vref << 7) | ((pd & 0b11) << 5) | (gain << 4)  # problem here
+        command[2] = low_8_bits
 
         if not 0 <= channel <= 3:
             raise ValueError("channel should be between 0 and 3")
@@ -41,7 +45,7 @@ class MCP4728:
             raise ValueError("value should be between 0 and 4095")
 
         self.board.i2c_write(self.addr, command)  # SAVED ON MEM
-        print("channel not complete yet")
+
 
     def fast_write(self, value_A: int, value_B: int, value_C: int, value_D: int) -> None:
         # Insert your code here
@@ -64,15 +68,17 @@ class MCP4728:
         # ]
 
         command = bytearray(9)
+
         command[0] = (_MCP4728_MULTI_WRITE_CMD)
-        command[1] = (value_A >> 4) & 0xFF
-        command[2] = (value_A & 0x0F) << 4
-        command[3] = (value_B >> 4) & 0xFF
-        command[4] = (value_B & 0x0F) << 4
-        command[5] = (value_C >> 4) & 0xFF
-        command[6] = (value_C & 0x0F) << 4
-        command[7] = (value_D >> 4) & 0xFF
-        command[8] = (value_D & 0x0F) << 4
+
+        command[1] = (value_A >> 8) & 0x0F
+        command[2] = value_A & 0xFF
+        command[3] = (value_B >> 8) & 0x0F
+        command[4] = value_B & 0xFF
+        command[5] = (value_C >> 8) & 0x0F
+        command[6] = value_C & 0xFF
+        command[7] = (value_D >> 8) & 0x0F
+        command[8] = value_D & 0xFF
 
         self.board.i2c_write(self.addr, command)  # MOVED THIS HERE
         # command1 = _MCP4728_MULTI_IR_CMD
@@ -85,15 +91,17 @@ class MCP4728:
                 raise ValueError("for all values be within 0 and 4095")
 
             command = bytearray(9)
+
             command[0] = (_MCP4728_MULTI_WRITE_CMD)
-            command[1] = (value_A >> 4) & 0xFF
-            command[2] = (value_A & 0x0F) << 4
-            command[3] = (value_B >> 4) & 0xFF
-            command[4] = (value_B & 0x0F) << 4
-            command[5] = (value_C >> 4) & 0xFF
-            command[6] = (value_C & 0x0F) << 4
-            command[7] = (value_D >> 4) & 0xFF
-            command[8] = (value_D & 0x0F) << 4
+
+            command[1] = (value_A >> 8) & 0x0F
+            command[2] = value_A & 0xFF
+            command[3] = (value_B >> 8) & 0x0F
+            command[4] = value_B & 0xFF
+            command[5] = (value_C >> 8) & 0x0F
+            command[6] = value_C & 0xFF
+            command[7] = (value_D >> 8) & 0x0F
+            command[8] = value_D & 0xFF
 
     # command = [
     #
