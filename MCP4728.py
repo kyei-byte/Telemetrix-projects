@@ -30,8 +30,8 @@ class MCP4728:
         # low_byte = value & 0xFF   # Lower bits
         # command = [high_byte, low_byte]  # getting rid of this
         command = bytearray(3)        # to create sequence of bytes
-        command[0] = (_MCP4728_MULTI_WRITE_CMD | (channel << 1) | udac) & 0xFF
-        command[1] = ((value >> 4) & 0xFF) | (vref << 7) | (pd << 5) | (gain << 4)   # problem here
+        command[0] = (_MCP4728_MULTI_WRITE_CMD | (channel << 1) | udac)   # app by pedro
+        command[1] = ((value >> 4) & 0xFF) | (vref << 7) | ((pd & 0b11) << 5 | (gain << 4))  # problem here
         command[2] = (value & 0x0F) << 4
 
         if not 0 <= channel <= 3:
