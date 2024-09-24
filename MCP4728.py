@@ -35,7 +35,7 @@ class MCP4728:
         low_8_bits = value & 0x0FF
 
         command[0] = (_MCP4728_MULTI_WRITE_CMD | (channel << 1) | udac)   # app by pedro
-        command[1] = (high_4_bits) | (vref << 7) | ((pd & 0b11) << 5) | (gain << 4)  # problem here
+        command[1] = high_4_bits | (vref << 7) | ((pd & 0b11) << 5) | (gain << 4)  # problem here
         command[2] = low_8_bits
 
         if not 0 <= channel <= 3:
@@ -69,7 +69,7 @@ class MCP4728:
 
         command = bytearray(9)
 
-        command[0] = (_MCP4728_MULTI_WRITE_CMD)
+        command[0] = _MCP4728_MULTI_WRITE_CMD
 
         command[1] = (value_A >> 8) & 0x0F
         command[2] = value_A & 0xFF
@@ -92,7 +92,7 @@ class MCP4728:
 
             command = bytearray(9)
 
-            command[0] = (_MCP4728_MULTI_WRITE_CMD)
+            command[0] = _MCP4728_MULTI_WRITE_CMD
 
             command[1] = (value_A >> 8) & 0x0F
             command[2] = value_A & 0xFF
