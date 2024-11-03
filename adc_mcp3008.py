@@ -18,7 +18,7 @@ class MCP3008DAC:
         self.board = board
         self.cs_pin = cs_pin
 
-        # Initializing spi
+        # Initializing spi here
         self.board.set_pin_mode_spi()
         self.board.set_pin_mode_digital_output(cs_pin)
 
@@ -27,22 +27,26 @@ class MCP3008DAC:
         if channel < 0 or channel > 7:
             raise ValueError("Channel must be between 0 and 7")
 
-        # command for MCP3008
-        start_bit = 1
-        end_bit = 1
-        command = [start_bit, (end_bit << 7) | (channel << 4), 0]   # right??
+        # constructing command byte for MCP3008 and setting start bit and diff mode to 1's
+        command = 0b00011000 | (channel << 1)
+        #start_bit = 1
+        #end_bit = 1
+        #command = [start_bit, (end_bit << 7) | (channel << 4), 0]   # right??
 
-        # setting Channel Select low to start comm
+        # chip select has to be low to start comm so setting CS to low = 0 to start comm
         self.board.digital_write(self.cs_pin, 0)
-        time.sleep(0.001)
+        time.sleep(0.001)     # for a bit of delay
 
-        # setting the spi transfer
-        response = self.board.spi_transfer(command)
+        # changing this setting from spi transfer to spi blocking and setting up respective parameters
+        response = self.board.spi_read_blocking(register_selection=command, number_of_bytes_to_read=2, call_back=None,
+                                                enable_read_bit=False)
 
-        # setting Channel Select high to end com
+        # setting Chip Select high=1 to end comm
         self.board.digital_write(self.cs_pin, 1)
 
-        # setting the response to get the adc value
-        adc_value = ((response[1] & 3) << 8)    # right??
+        # setting the response to get the adc value 10-bit
+        msb = (response[0] & 0b00000011) << 8   # to extract upper bits, D9 and D8
+        lsb = response[1]                       # to extract lower bits, D7 to D0
+        adc_value = msb | lsb                   # this to get the 10-bit
 
         return adc_value
