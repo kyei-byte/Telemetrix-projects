@@ -1,5 +1,6 @@
 import sys
 import time
+
 from telemetrix import telemetrix
 
 _MCP4728_MULTI_IR_CMD = 0x40
