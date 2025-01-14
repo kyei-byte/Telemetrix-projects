@@ -44,10 +44,10 @@ class MCP3008DAC:
         time.sleep(0.001)     # for a bit of delay
 
         # changing this setting from spi transfer to spi blocking and setting up respective parameters
-        response = self.board.spi_read_blocking(register_selection=command,number_of_bytes_to_read=2,call_back=self.read_callback,
+        response = self.board.spi_read_blocking(register_selection=command, number_of_bytes_to_read=2, call_back=self.read_callback,
                                                 enable_read_bit=False)
 
-        # setting Chip Select high=1 to end comm
+        # setting chip select high=1 to end comm
         self.board.digital_write(self.cs_pin, 1)
 
         # setting the response most and least significant bit to get the adc value 10-bit
